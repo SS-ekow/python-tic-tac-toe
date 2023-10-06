@@ -1,48 +1,77 @@
 import tkinter as tk
 
 root = tk.Tk()
-root.resizable(False, False)
+
+root.resizable(True, True)
 root.title("Tic-Tac-Toe")
 
 tk.Label(root, text="Tic-Tac-Toe", font=('Papyrus', 25)).pack()
 current_chr = "X"
 
-status_label = tk.Label(root, text ="", font =('Papyrus', 14), bg= 'blue')
+status_label = tk.Label(root, text ="X's turn", font =('Papyrus', 14), bg= 'light blue')
 status_label.pack(fill = tk.X)
+
+def play_again():
+    global current_chr
+    current_chr = "X"
+    for point in XO_Points:
+        point.button.configure(state = tk.NORMAL)
+        point.reset()
+    status_label.configure(text = "X's turn")
+    play_again_button.pack_forget()
+play_again_button = tk.Button(root, text = "Play again", font =('Papyrus', 15), command = play_again)
+
+current_chr = "X"
 # play area
 
 play_area = tk.Frame(root, width= 400, height = 400, bg= 'grey')
 X_points = []
 O_points= []
+XO_Points = []
+
+
+
+
+        
+
+    
+
 
 class XOPoint:
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.value = None
-        self.button = tk.Button(play_area, text ="", width = 10, height = 5, command = self.set)
+        self.button = tk.Button(play_area, text ="", width = 15, height = 5, command = self.set)
         self.button.grid(row = x, column = y)
         
     def set(self):
         global current_chr
         if not self.value:
-            self.button.configure(text=current_chr, bg='snow', fg='black')
+            self.button.configure(text=current_chr, bg='light blue', fg='black')
             self.value = current_chr 
             if current_chr == "X":
                 X_points.append(self)
+                status_label.configure(text = "O's turn")
                 current_chr = "O"
             elif current_chr == "O":
                 O_points.append(self)
                 current_chr = "X"
+                status_label.configure(text = "X's turn")
         check_win()
         
     def reset(self):
-        self.button.configue(text = "", bg= "grey")
+        self.button.configure(text="", bg='lightgray')
+        if self.value == "X":
+            X_points.remove(self)
+        elif self.value == "O":
+            O_points.remove(self)
         self.value = None
-
+        
+    
 for x in range(1,4):
     for y in range(1,4):
-        XOPoint(x,y)
+        XO_Points.append(XOPoint(x,y))
         
 class WinningPossibility:
     def __init__(self, x1, y1, x2, y2, x3, y3):
@@ -85,21 +114,30 @@ winning_possibilities = [
     WinningPossibility(1, 1, 2, 2, 3, 3),
     WinningPossibility(3, 1, 2, 2, 1, 3)
 ]
+def disable_game():
+        for point in XO_Points:
+            point.button.configure(state = tk.DISABLED)
+        play_again_button.pack(pady=10)
+            
 def check_win():
     for possibility in winning_possibilities:
         if possibility.check('X'):
             status_label.configure(text="X won!")
+            disable_game()
             return
         elif possibility.check('O'):
             status_label.configure(text="O won!")
+            disable_game()
             return
     if len(X_points) + len(O_points) == 9:
         status_label.configure(text="Draw!")
+        disable_game()
         
         
             
 
 play_area.pack(padx=10, pady=10)
+
 
 
 
