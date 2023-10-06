@@ -28,15 +28,6 @@ play_area = tk.Frame(root, width= 400, height = 400, bg= 'grey')
 X_points = []
 O_points= []
 XO_Points = []
-
-
-
-
-        
-
-    
-
-
 class XOPoint:
     def __init__(self, x, y):
         self.x = x
@@ -68,7 +59,6 @@ class XOPoint:
             O_points.remove(self)
         self.value = None
         
-    
 for x in range(1,4):
     for y in range(1,4):
         XO_Points.append(XOPoint(x,y))
@@ -133,17 +123,7 @@ def check_win():
         status_label.configure(text="Draw!")
         disable_game()
         
-        
-            
-
 play_area.pack(padx=10, pady=10)
-
-
-
-
-
-
-
 
 root.mainloop()
 
